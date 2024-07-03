@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.CompanyMapper">
+
+	<select id="findAll" resultType="Company">
+		SELECT companys.id,
+		companys.name, companys.address1, companys.address2, companys.phon,
+		companys.email, companys.pass, types.name AS type_name,
+		companys.created
+		FROM companys JOIN types ON companys.type_id =
+		types.id
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT COUNT(*) FROM companys
+	</select>
+
+	<select id="limit" resultType="Company">
+		SELECT companys.id,
+		companys.name,
+		companys.address1, companys.address2, companys.phon,
+		companys.email,
+		companys.pass, types.name AS type_name,
+		companys.created
+		FROM companys
+		JOIN types ON companys.type_id =
+		types.id
+		LIMIT #{offset},
+		#{numPage}
+	</select>
+
+	<select id="findByEmail" resultType="Company">
+		SELECT * FROM
+		companys WHERE
+		email = #{email}
+	</select>
+
+	<insert id="insert" parameterType="Company">
+		INSERT INTO companys (name,
+		address1, address2, phon, email, pass, type_id, created)
+		VALUES
+		(#{name}, #{address1}, #{address2}, #{phon}, #{email}, #{pass}, 2,
+		NOW())
+	</insert>
+
+	<update id="update" parameterType="Company">
+		UPDATE companys
+		<set>
+			<if test="name !=''">name = #{name},</if>
+			<if test="address1 != ''">address1 = #{address1},</if>
+			<if test="address2 != ''">address2 = #{address2},</if>
+			<if test="phon != ''">phon = #{phon},</if>
+			<if test="email != ''">email = #{email},</if>
+			<if test="pass != ''">pass = #{pass}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM companys WHERE id
+		= #{id}
+	</delete>
+
+</mapper>

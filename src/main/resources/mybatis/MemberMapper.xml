@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.MemberMapper">
+
+	<select id="findAll" resultType="Member">
+		SELECT members.id, members.name,
+		members.address1, members.address2, members.age, gender_types.name AS
+		gender_name, members.phon, members.email, members.pass, types.name,
+		members.created
+		FROM members JOIN
+		gender_types ON members.gender_id =
+		gender_types.id
+		JOIN types ON
+		members.type_id = types.id
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT COUNT(*) FROM members
+	</select>
+
+	<select id="limit" resultType="Member">
+		SELECT members.id, members.name,
+		members.address1, members.address2,
+		members.age, gender_types.name AS
+		gender_name, members.phon,
+		members.email, members.pass, types.name,
+		members.created
+		FROM members
+		JOIN
+		gender_types ON members.gender_id =
+		gender_types.id
+		JOIN types ON
+		members.type_id = types.id
+		LIMIT #{offset}, #{numPage}
+	</select>
+
+	<select id="findByEmail" resultType="Member"
+		parameterType="string">
+		SELECT * FROM members
+		WHERE
+		email = #{email}
+	</select>
+
+	<insert id="insert" parameterType="Member">
+		INSERT INTO members
+		(name,
+		address1, address2, age, gender_id, phon, email, pass, type_id,
+		created )
+		VALUES (#{name}, #{address1}, #{address2}, #{age},
+		#{genderId}, #{phon},
+		#{email}, #{pass}, 1, NOW())
+	</insert>
+
+	<update id="update" parameterType="Member">
+		UPDATE members
+		<set>
+			<if test="name !=''">name = #{name},</if>
+			<if test="address1 != ''">address1 = #{address1},</if>
+			<if test="address2 != ''">address2 = #{address2},</if>
+			<if test="age != null">age = #{age},</if>
+			<if test="genderId != null">gender_id= #{genderId},</if>
+			<if test="phon != ''">phon = #{phon},</if>
+			<if test="email != ''">email = #{email},</if>
+			<if test="pass != ''">pass = #{pass}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM members WHERE id =
+		#{id}
+	</delete>
+
+</mapper>

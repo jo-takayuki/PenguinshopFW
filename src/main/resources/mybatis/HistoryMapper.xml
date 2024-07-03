@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.HistoryMapper">
+
+	<select id="findAll" resultType="History">
+		SELECT historys.id,
+		historys.mem_com_id, historys.type_id, types.name AS typeName,
+		historys.item_id, items.name AS itemName, historys.unit,
+		historys.created
+		FROM historys JOIN types ON historys.type_id =
+		types.id
+		JOIN items ON
+		historys.item_id = items.id
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT COUNT(*) FROM historys
+	</select>
+
+	<select id="limit" resultType="History">
+		SELECT historys.id,
+		historys.mem_com_id, historys.type_id, types.name AS typeName,
+		historys.item_id, items.name AS itemName, historys.unit,
+		historys.created
+		FROM historys JOIN types ON historys.type_id =
+		types.id
+		JOIN items ON
+		historys.item_id = items.id
+		LIMIT #{offset},
+		#{numPage}
+	</select>
+
+	<select id="findByIdAndTid" resultType="History">
+		SELECT * FROM historys
+		WHERE mem_com_id = #{id} AND type_id = #{tId}
+	</select>
+
+	<select id="seles" resultType="History">
+		SELECT DISTINCT DATE(created) AS
+		created
+		FROM historys
+		WHERE mem_com_id = #{id} AND type_id = #{tId}
+		ORDER BY created DESC;
+	</select>
+
+	<insert id="insert" parameterType="History">
+		INSERT INTO historys
+		(mem_com_id, type_id, item_id, unit, created)
+		VALUES(#{memComId},
+		#{typeId}, #{itemId}, #{unit}, NOW())
+	</insert>
+
+</mapper>
